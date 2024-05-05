@@ -1,7 +1,16 @@
 from rest_framework import serializers
 from .models import Blog
 
+# validators
+def name_valid(value):
+    if value == "mango":
+        raise serializers.ValidationError("Name cannot be mango")
+    else:
+        return value
+
 class BlogSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(validators = [name_valid])
+    
     class Meta:
         model = Blog
         # method 1 select all
@@ -10,6 +19,21 @@ class BlogSerializer(serializers.ModelSerializer):
         # fields = ['name', 'description', 'is_public']
         # method 3 exclude certain fields
         # exclude = ['description']
+        
+    #field level validation: validate + _ + field_name
+    def validate_name(self, value):
+            
+        if len(value) < 4:
+            raise serializers.ValidationError("Too short")
+        else:
+            return value
+    
+    #Object level validation. Good for validation between multiple fields.
+    def validate(self, data):
+        if data['name'] == data['description']:
+            raise serializers.ValidationError("Description cannot be same as Name")
+        else:
+            return data
 # --------------------Simple serializer-------------------- 
 # class BlogSerializer(serializers.Serializer):
 #     id = serializers.IntegerField(read_only =  True)
