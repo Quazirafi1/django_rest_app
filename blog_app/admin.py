@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Blog, BlogComment
+from .models import Blog, BlogComment, Category
 
 class BlogAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'author', 'post_date', 'is_public')
@@ -9,4 +9,5 @@ class BlogAdmin(admin.ModelAdmin):
     list_editable = ("is_public",)
 admin.site.register(Blog, BlogAdmin)
 admin.site.register(BlogComment)
+admin.site.register(Category)
 

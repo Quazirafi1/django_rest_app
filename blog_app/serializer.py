@@ -1,65 +1,16 @@
 from rest_framework import serializers
-from .models import Blog
-
-# validators
-def name_valid(value):
-    if value == "mango":
-        raise serializers.ValidationError("Name cannot be mango")
-    else:
-        return value
+from .models import Blog, Category
 
 class BlogSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(validators = [name_valid])
-    
     class Meta:
         model = Blog
-        # method 1 select all
         fields = "__all__"
-        # # method 2 select only particular fields
-        # fields = ['name', 'description', 'is_public']
-        # method 3 exclude certain fields
-        # exclude = ['description']
         
-    #field level validation: validate + _ + field_name
-    def validate_name(self, value):
-            
-        if len(value) < 4:
-            raise serializers.ValidationError("Too short")
-        else:
-            return value
+class CategorySerializer(serializers.ModelSerializer):
+    category_name = serializers.CharField()
+    #must be same as related name present in the model
+    category = BlogSerializer(many=True, read_only = True)
     
-    #Object level validation. Good for validation between multiple fields.
-    def validate(self, data):
-        if data['name'] == data['description']:
-            raise serializers.ValidationError("Description cannot be same as Name")
-        else:
-            return data
-# --------------------Simple serializer-------------------- 
-# class BlogSerializer(serializers.Serializer):
-#     id = serializers.IntegerField(read_only =  True)
-#     name = serializers.CharField()
-#     author = serializers.CharField()
-#     description = serializers.CharField()
-#     post_date = serializers.DateField()
-#     is_public = serializers.BooleanField()
-#     slug = serializers.CharField()
-    
-#     #for post requests
-#     def create(self, validated_data):
-#         return Blog.objects.create(**validated_data)
-    
-#     #for put, patches
-#     def update(self, instance, validated_data):
-#         # validated_data.get('name', instance.name): This part is using the get() method on a dictionary-like object called validated_data. 
-#         # It tries to retrieve the value associated with the key 'name' from validated_data. If the key 'name' exists in validated_data, it returns the corresponding value.
-#         # If the key doesn't exist, it returns instance.name (old data).
-#         instance.name = validated_data.get('name', instance.name)
-#         instance.author = validated_data.get('author', instance.author)
-#         instance.description = validated_data.get('description', instance.description)
-#         instance.post_date = validated_data.get('post_date', instance.post_date)
-#         instance.is_public = validated_data.get('is_public', instance.is_public)
-#         instance.slug = validated_data.get('slug', instance.slug)
-        
-#         instance.save()
-#         return instance
-    
+    class Meta:
+        model = Category
+        exclude = ["id"]

@@ -3,9 +3,17 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import date
 from django.template.defaultfilters import slugify
+
+class Category(models.Model):
+    category_name = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return self.category_name
+
 class Blog(models.Model):
     name = models.CharField(max_length=100)
     author = models.CharField(max_length=100)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name="category")
     description = models.TextField()
     post_date = models.DateField(default=date.today)
     is_public = models.BooleanField(default=True)
