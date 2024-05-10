@@ -8,13 +8,13 @@ from rest_framework.views import APIView
 class CategoryListView(APIView):
     def get(self, request):
         all_category = Category.objects.all()
-        serializers = CategorySerializer(all_category, many=True)
+        serializers = CategorySerializer(all_category, many=True, context={'request': request})
         return Response(serializers.data)
 
 class CategoryDetailView(APIView):
     def get(self, request, pk):
         category = Category.objects.get(pk=pk)
-        serializers = CategorySerializer(category)
+        serializers = CategorySerializer(category, context={'request': request})
         return Response(serializers.data)
 
 
