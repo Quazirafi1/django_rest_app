@@ -15,6 +15,6 @@ urlpatterns = [
     
     #generic view 
     path('blog_list_generic/', views.BlogListGenericView.as_view(), name="blog_list_generic"),     
-    path('blog_detail_generic/<int:pk>', views.BlogDetailGeneric.as_view(), name="blog_detail_generic"),     
+    path('blog_detail_generic/<str:slug>', views.BlogDetailGeneric.as_view(), name="blog_detail_generic"),     
     
 ]
