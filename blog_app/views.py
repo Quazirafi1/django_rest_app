@@ -2,8 +2,10 @@ from .models import Blog, Category
 from .serializer import BlogSerializer, CategorySerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from rest_framework import status
+from rest_framework import status, mixins, generics
 from rest_framework.views import APIView
+
+
 
 class CategoryListView(APIView):
     def get(self, request):
@@ -32,6 +34,7 @@ class BlogListView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
 
 #GET, PUT, DELETE
 class BlogDetailView(APIView):
@@ -56,42 +59,28 @@ class BlogDetailView(APIView):
         blog.delete()
         return Response(status=status.HTTP_200_OK)
     
-# @api_view(['GET', 'POST'])
-# def blog(request):
-#     if request.method == 'GET':
-#         all_blogs = Blog.objects.all()
-#         serializer = BlogSerializer(all_blogs, many=True)
-        
-#         return Response(serializer.data, status=status.HTTP_200_OK)
+# generic views using mixins:
+class BlogListGenericView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
     
-#     if request.method == 'POST':
-#         serializer = BlogSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         else:
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
     
-# @api_view(['GET', 'PUT', 'DELETE'])
-# def blog_detail(request, pk):
-#     if request.method == 'GET':
-#         blog = Blog.objects.get(pk=pk)
-#         serializer = BlogSerializer(blog)
-        
-#         return Response(serializer.data, status=status.HTTP_200_OK)
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+class BlogDetailGeneric(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
     
-#     if request.method == 'PUT':
-#         blog = Blog.objects.get(pk=pk)
-#         serializer = BlogSerializer(blog, data=request.data)
-        
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_200_OK)
-#         else:
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
     
-#     if request.method == 'DELETE':
-#         blog = Blog.objects.get(pk=pk)
-#         blog.delete()
-#         return Response(status=status.HTTP_200_OK)
-        
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+    
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+    
+    
