@@ -14,4 +14,5 @@ urlpatterns = [
     path('category_list/', views.CategoryListCreateView.as_view(), name='category-list'),
     path('category_detail/<int:pk>/', views.CategoryDetailView.as_view(), name='category-detail'),
     path('blog_comment_list/<int:blog_id>/', views.BlogCommentListCreateView.as_view(), name='blog-comment-list'),
+    path('blog_comment_detail/<int:blog_id>/<int:comment_id>/', views.BlogCommentDetailView.as_view(), name='blog-comment-detail'),
 ]

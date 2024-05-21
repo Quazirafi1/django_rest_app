@@ -4,13 +4,14 @@ from django.urls import reverse
 
 class BlogCommentSerializer(serializers.ModelSerializer):
     blog = serializers.StringRelatedField(read_only = True)
-    author = serializers.StringRelatedField(read_only=True)
+    author = serializers.StringRelatedField(read_only= True)
     
     class Meta:
         model = BlogComment
         fields = "__all__"
 
 class BlogSerializer(serializers.ModelSerializer):
+    # to understand observe the changes in the form after commenting out the next line
     author = serializers.StringRelatedField()
     # nesting serializers to show related comments as well
     comments = serializers.SerializerMethodField()
