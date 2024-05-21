@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blog_app',
     'account',
-    'rest_framework' 
+    'rest_framework',
+    'rest_framework.authtoken' 
 ]
 
 MIDDLEWARE = [
@@ -138,6 +139,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATED_CLASSES' : [
-        'rest_framwork.authentication.BasicAuthentication'
+        # 'rest_framwork.authentication.BasicAuthentication'
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ]
 }
