@@ -5,6 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 import logging
 from . serializers import UserRegisterSerializer
 from rest_framework.authtoken.models import Token
+from rest_framework_simplejwt.tokens import RefreshToken
+
 
 logger = logging.getLogger(__name__)
 
@@ -39,8 +41,13 @@ def user_register(request):
             data['username'] = account.username
             data['email'] = account.email
             
-            token = Token.objects.get(user=account).key
-            data['token'] = token
+            # token = Token.objects.get(user=account).key
+            # data['token'] = token
+            refresh = RefreshToken.for_user(account)
+            data['token'] = {
+                'refresh':str(refresh),
+                'access': str(refresh.access_token)
+            }
         else:
             data = serializer.errors
             
